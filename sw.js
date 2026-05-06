@@ -14,13 +14,52 @@ const PRECACHE = [
 
   OFFLINE_URL,
 
-  'https://batukessel.github.io/blog-pwa/icon-192.png',
+  'https://batukessel.github.io/madasapwa/icon-192.png',
 
-  'https://batukessel.github.io/blog-pwa/icon-512.png'
+  'https://batukessel.github.io/madasapwa/icon-512.png'
 
 ];
 
 // INSTALL
+
+
+fetch(FEED)
+
+  .then(function(res){
+
+    return res.json();
+
+  })
+
+  .then(function(data){
+
+    const entries =
+      data.feed.entry || [];
+
+    entries.forEach(function(item){
+
+      item.link.forEach(function(link){
+
+        if(link.rel==='alternate'){
+
+          caches.open(CACHE_NAME)
+
+            .then(function(cache){
+
+              cache.add(link.href);
+
+            });
+
+        }
+
+      });
+
+    });
+
+  });
+const FEED =
+  BLOG_URL +
+  '/feeds/posts/default?alt=json&max-results=20';
 self.addEventListener(
   'install',
   function(event){
