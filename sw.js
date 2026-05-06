@@ -2,7 +2,8 @@ const CACHE_NAME =
   'almukhtar-pwa-v100';
 
 const OFFLINE_URL =
-  'https://madasadzikir.blogspot.com/offline.html';
+  
+'https://batukessel.github.io/madasapwa/offline.html';
 
 const BLOG_URL =
   'https://madasadzikir.blogspot.com/';
