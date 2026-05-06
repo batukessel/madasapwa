@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>Offline</title>
+
+<style>
+
+body{
+
+  background:#0f172a;
+  color:#fff;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+
+  height:100vh;
+
+  font-family:Arial;
+
+}
+
+h1{
+  font-size:32px;
+}
+
+p{
+  opacity:.7;
+}
+
+#clock{
+
+  font-size:60px;
+
+  margin-top:20px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>📡 Offline Mode</h1>
+
+<p>Aplikasi tetap berjalan tanpa internet</p>
+
+<div id="clock">
+00:00:00
+</div>
+
+<script>
+
+setInterval(function(){
+
+  var d=new Date();
+
+  var h=
+    ('0'+d.getHours()).slice(-2);
+
+  var m=
+    ('0'+d.getMinutes()).slice(-2);
+
+  var s=
+    ('0'+d.getSeconds()).slice(-2);
+
+  document.getElementById('clock')
+    .innerHTML=
+      h+':'+m+':'+s;
+
+},1000);
+
+</script>
+
+</body>
+</html>
