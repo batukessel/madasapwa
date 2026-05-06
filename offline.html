@@ -1,42 +1,88 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta charset="UTF-8">
 
-<title>Offline</title>
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+/>
+
+<title>Offline Mode</title>
 
 <style>
 
 body{
 
+  margin:0;
+
   background:#0f172a;
+
   color:#fff;
 
+  font-family:Arial;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   flex-direction:column;
 
   height:100vh;
 
-  font-family:Arial;
+  overflow:hidden;
+
+}
+
+img{
+
+  width:120px;
+
+  height:120px;
+
+  border-radius:24px;
+
+  margin-bottom:20px;
 
 }
 
 h1{
+
+  margin:0;
+
   font-size:32px;
+
 }
 
 p{
+
   opacity:.7;
+
+  margin-top:10px;
+
 }
 
 #clock{
 
   font-size:60px;
 
-  margin-top:20px;
+  font-weight:bold;
+
+  margin-top:30px;
+
+  letter-spacing:3px;
+
+}
+
+#date{
+
+  margin-top:10px;
+
+  opacity:.7;
 
 }
 
@@ -46,17 +92,25 @@ p{
 
 <body>
 
-<h1>📡 Offline Mode</h1>
+<img src="https://batukessel.github.io/madasapwa/icon-512.png"/>
 
-<p>Aplikasi tetap berjalan tanpa internet</p>
+<h1>Offline Mode</h1>
+
+<p>
+Aplikasi tetap berjalan tanpa internet
+</p>
 
 <div id="clock">
 00:00:00
 </div>
 
+<div id="date">
+Loading...
+</div>
+
 <script>
 
-setInterval(function(){
+function updateClock(){
 
   var d=new Date();
 
@@ -69,11 +123,52 @@ setInterval(function(){
   var s=
     ('0'+d.getSeconds()).slice(-2);
 
-  document.getElementById('clock')
-    .innerHTML=
-      h+':'+m+':'+s;
+  document.getElementById(
+    'clock'
+  ).innerHTML=
+    h+':'+m+':'+s;
 
-},1000);
+  var hari=[
+    'Minggu',
+    'Senin',
+    'Selasa',
+    'Rabu',
+    'Kamis',
+    'Jumat',
+    'Sabtu'
+  ];
+
+  var bulan=[
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
+  ];
+
+  document.getElementById(
+    'date'
+  ).innerHTML=
+    hari[d.getDay()]
+    +', '
+    +d.getDate()
+    +' '
+    +bulan[d.getMonth()]
+    +' '
+    +d.getFullYear();
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
 
 </script>
 
