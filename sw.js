@@ -1,66 +1,12 @@
-const CACHE_NAME =
-  'almukhtar-pwa-v100';
-
-const OFFLINE_URL =
-  
-'https://batukessel.github.io/madasapwa/offline.html';
+const CACHE_NAME = 'almukhtar-real-offline-v1';
 
 const BLOG_URL =
   'https://madasadzikir.blogspot.com/';
 
-// FILE AWAL
-const PRECACHE = [
-
-  BLOG_URL,
-
-  OFFLINE_URL,
-
-  'https://batukessel.github.io/madasapwa/icon-192.png',
-
-  'https://batukessel.github.io/madasapwa/icon-512.png'
-
-];
+const OFFLINE_URL =
+  'https://batukessel.github.io/madasapwa/offline.html';
 
 // INSTALL
-
-
-fetch(FEED)
-
-  .then(function(res){
-
-    return res.json();
-
-  })
-
-  .then(function(data){
-
-    const entries =
-      data.feed.entry || [];
-
-    entries.forEach(function(item){
-
-      item.link.forEach(function(link){
-
-        if(link.rel==='alternate'){
-
-          caches.open(CACHE_NAME)
-
-            .then(function(cache){
-
-              cache.add(link.href);
-
-            });
-
-        }
-
-      });
-
-    });
-
-  });
-const FEED =
-  BLOG_URL +
-  '/feeds/posts/default?alt=json&max-results=20';
 self.addEventListener(
   'install',
   function(event){
@@ -73,7 +19,10 @@ self.addEventListener(
 
         .then(function(cache){
 
-          return cache.addAll(PRECACHE);
+          return cache.addAll([
+            BLOG_URL,
+            OFFLINE_URL
+          ]);
 
         })
 
@@ -131,104 +80,63 @@ self.addEventListener(
       return;
     }
 
-    // NAVIGATION PAGE
-    if(
-      event.request.mode === 'navigate'
-    ){
-
-      event.respondWith(
-
-        fetch(event.request)
-
-          .then(function(response){
-
-            const clone =
-              response.clone();
-
-            caches.open(CACHE_NAME)
-
-              .then(function(cache){
-
-                cache.put(
-                  event.request,
-                  clone
-                );
-
-              });
-
-            return response;
-
-          })
-
-          .catch(function(){
-
-            return caches.match(
-              event.request
-            )
-
-            .then(function(resp){
-
-              return resp ||
-
-                caches.match(
-                  OFFLINE_URL
-                );
-
-            });
-
-          })
-
-      );
-
-      return;
-
-    }
-
-    // STATIC FILES
     event.respondWith(
 
       caches.match(event.request)
 
-        .then(function(cached){
+        .then(function(cacheResponse){
 
-          return cached ||
+          // ADA CACHE
+          if(cacheResponse){
 
-            fetch(event.request)
+            return cacheResponse;
 
-              .then(function(response){
+          }
 
-                if(
-                  response &&
-                  response.status===200
-                ){
+          // FETCH INTERNET
+          return fetch(event.request)
 
-                  const clone=
-                    response.clone();
+            .then(function(networkResponse){
 
-                  caches.open(CACHE_NAME)
+              // CLONE
+              const responseClone =
+                networkResponse.clone();
 
-                    .then(function(cache){
+              // SIMPAN CACHE
+              caches.open(CACHE_NAME)
 
-                      cache.put(
-                        event.request,
-                        clone
-                      );
+                .then(function(cache){
 
-                    });
+                  cache.put(
+                    event.request,
+                    responseClone
+                  );
 
-                }
+                });
 
-                return response;
+              return networkResponse;
 
-              })
+            })
 
-              .catch(function(){
+            .catch(function(){
 
-                return caches.match(
-                  OFFLINE_URL
-                );
+              // COBA HOMEPAGE CACHE
+              return caches.match(BLOG_URL)
 
-              });
+                .then(function(home){
+
+                  if(home){
+                    return home;
+                  }
+
+                  // FALLBACK OFFLINE
+                  return caches.match(
+                    OFFLINE_URL
+                  );
+
+                });
+
+            });
 
         })
 
